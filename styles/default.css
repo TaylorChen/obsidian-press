@@ -1,0 +1,314 @@
+/* Obsidian Press — Default PDF Stylesheet */
+
+/* === Base === */
+:root {
+  --text-color: #1a1a1a;
+  --bg-color: #ffffff;
+  --code-bg: #f5f5f5;
+  --border-color: #e0e0e0;
+  --accent-color: #7c3aed;
+}
+
+@page {
+  size: A4;
+  margin: 25mm;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  color: var(--text-color);
+  max-width: 100%;
+}
+
+/* === Headings === */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.3;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 2em;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.2em;
+}
+
+h3 { font-size: 1.25em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1em; }
+h6 { font-size: 0.9em; color: #666; }
+
+/* === Paragraphs === */
+p {
+  margin: 0.8em 0;
+  orphans: 3;
+  widows: 3;
+}
+
+/* === Links === */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* === Images === */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+  border-radius: 4px;
+}
+
+/* Pandoc-style image attributes */
+img[width] {
+  display: inline-block;
+}
+
+figure {
+  margin: 1.5em 0;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+figcaption {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 0.5em;
+}
+
+/* === Code === */
+code {
+  font-family: "Fira Code", "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.85em;
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1em;
+  overflow-x: auto;
+  page-break-inside: avoid;
+  margin: 1em 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* Pandoc code blocks */
+.sourceCode {
+  background: var(--code-bg);
+}
+
+pre.sourceCode {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+/* === Blockquotes === */
+blockquote {
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  border-left: 4px solid var(--accent-color);
+  background: #f8f8f8;
+  color: #555;
+}
+
+blockquote p {
+  margin: 0.3em 0;
+}
+
+/* === Callouts (Obsidian-style) === */
+.callout {
+  margin: 1.5em 0;
+  padding: 1em;
+  border-radius: 8px;
+  border-left: 4px solid;
+  page-break-inside: avoid;
+}
+
+.callout-title {
+  font-weight: 600;
+  font-size: 1.05em;
+  margin-bottom: 0.5em;
+}
+
+.callout-body {
+  font-size: 0.95em;
+}
+
+.callout-body p {
+  margin: 0.3em 0;
+}
+
+/* Callout type colors */
+.callout-note { border-color: #448aff; background: #e8f0fe; }
+.callout-note .callout-title { color: #1a73e8; }
+
+.callout-tip { border-color: #00bfa5; background: #e0f7fa; }
+.callout-tip .callout-title { color: #00897b; }
+
+.callout-important { border-color: #7c4dff; background: #ede7f6; }
+.callout-important .callout-title { color: #651fff; }
+
+.callout-warning { border-color: #ff9100; background: #fff3e0; }
+.callout-warning .callout-title { color: #e65100; }
+
+.callout-caution { border-color: #ff5252; background: #ffebee; }
+.callout-caution .callout-title { color: #d50000; }
+
+.callout-abstract { border-color: #448aff; background: #e8eaf6; }
+.callout-abstract .callout-title { color: #283593; }
+
+.callout-info { border-color: #448aff; background: #e3f2fd; }
+.callout-info .callout-title { color: #1565c0; }
+
+.callout-todo { border-color: #448aff; background: #e8f0fe; }
+.callout-todo .callout-title { color: #1a73e8; }
+
+.callout-example { border-color: #7c4dff; background: #f3e5f5; }
+.callout-example .callout-title { color: #7b1fa2; }
+
+.callout-quote { border-color: #9e9e9e; background: #fafafa; }
+.callout-quote .callout-title { color: #616161; }
+
+.callout-success { border-color: #00c853; background: #e8f5e9; }
+.callout-success .callout-title { color: #2e7d32; }
+
+.callout-question { border-color: #ff6d00; background: #fff8e1; }
+.callout-question .callout-title { color: #e65100; }
+
+.callout-failure { border-color: #ff1744; background: #fce4ec; }
+.callout-failure .callout-title { color: #c62828; }
+
+.callout-danger { border-color: #d50000; background: #ffebee; }
+.callout-danger .callout-title { color: #b71c1c; }
+
+.callout-bug { border-color: #f44336; background: #fbe9e7; }
+.callout-bug .callout-title { color: #bf360c; }
+
+/* === Tables === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  page-break-inside: avoid;
+}
+
+thead {
+  background: #f0f0f0;
+}
+
+th, td {
+  padding: 0.5em 0.8em;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* === Lists === */
+ul, ol {
+  margin: 0.5em 0;
+  padding-left: 2em;
+}
+
+li {
+  margin: 0.3em 0;
+}
+
+li > ul, li > ol {
+  margin: 0.2em 0;
+}
+
+/* Task lists */
+li.task-list-item {
+  list-style: none;
+  margin-left: -1.5em;
+}
+
+li.task-list-item input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+/* === Horizontal Rule === */
+hr {
+  border: none;
+  border-top: 2px solid var(--border-color);
+  margin: 2em 0;
+}
+
+/* === Math === */
+.math-display {
+  margin: 1.5em 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.math-inline {
+  font-style: italic;
+}
+
+/* === Mark (highlights) === */
+mark {
+  background: #fff176;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+/* === Superscript / Subscript === */
+sup { font-size: 0.75em; vertical-align: super; }
+sub { font-size: 0.75em; vertical-align: sub; }
+
+/* === Print adjustments === */
+@media print {
+  body {
+    font-size: 10pt;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  pre, blockquote, table, .callout, figure {
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: var(--accent-color);
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #999;
+  }
+}

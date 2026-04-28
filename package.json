@@ -1,0 +1,30 @@
+{
+  "name": "obsidian-press",
+  "version": "1.0.0",
+  "description": "High-fidelity PDF export plugin for Obsidian, powered by Pandoc",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && node esbuild.config.mjs production",
+    "verify:code-export": "node scripts/verify-code-export.mjs",
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
+  },
+  "keywords": ["obsidian", "pandoc", "pdf", "docx", "html", "export", "latex", "typst", "mermaid"],
+  "license": "MIT",
+  "files": [
+    "main.js",
+    "manifest.json",
+    "styles.css",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "builtin-modules": "^4.0.0",
+    "esbuild": "^0.21.0",
+    "obsidian": "latest",
+    "tslib": "^2.6.0",
+    "typescript": "^5.4.0"
+  }
+}
