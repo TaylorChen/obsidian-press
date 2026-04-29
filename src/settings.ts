@@ -23,10 +23,10 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Pandoc path")
-      .setDesc("Path to the Pandoc binary")
+      .setDesc("Path to the pandoc binary")
       .addText((text) =>
         text
-          .setPlaceholder("/opt/Homebrew/bin/Pandoc")
+          .setPlaceholder("/opt/homebrew/bin/pandoc")
           .setValue(this.plugin.settings.pandocPath)
           .onChange(async (value) => {
             this.plugin.settings.pandocPath = value || "/opt/homebrew/bin/pandoc";
@@ -39,11 +39,11 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       .setDesc("The PDF rendering engine to use")
       .addDropdown((dropdown) =>
         dropdown
-          .addOption("xelatex", "XeLaTeX (best quality)")
-          .addOption("pdflatex", "pdfLaTeX (auto XeLaTeX for CJK)")
-          .addOption("lualatex", "LuaLaTeX")
+          .addOption("xelatex", "Xelatex (best quality)")
+          .addOption("pdflatex", "Pdflatex (auto xelatex for cjk)")
+          .addOption("lualatex", "Lualatex")
           .addOption("wkhtmltopdf", "Wkhtmltopdf (lightweight)")
-          .addOption("weasyprint", "WeasyPrint (CSS-based)")
+          .addOption("weasyprint", "Weasyprint (CSS-based)")
           .addOption("typst", "Typst (experimental)")
           .setValue(this.plugin.settings.pdfEngine)
           .onChange(async (value: string) => {
@@ -179,13 +179,13 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("CJK font")
+      .setName("Cjk font")
       .setDesc(
-        "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable XeLaTeX choice."
+        "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable xelatex choice."
       )
       .addText((text) =>
         text
-          .setPlaceholder("STHeitiSC-Medium")
+          .setPlaceholder("Stheitisc-medium")
           .setValue(this.plugin.settings.cjkFont)
           .onChange(async (value) => {
             this.plugin.settings.cjkFont = value;
@@ -194,8 +194,8 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("CJK support")
-      .setDesc("Add CJK font configuration for LaTeX engines")
+      .setName("Cjk support")
+      .setDesc("Add cjk font configuration for LaTeX engines")
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.enableCjk)
@@ -224,8 +224,8 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Custom Pandoc template")
-      .setDesc("Path to custom Pandoc template file")
+      .setName("Custom pandoc template")
+      .setDesc("Path to custom pandoc template file")
       .addText((text) =>
         text
           .setPlaceholder("templates/custom.html")
@@ -266,8 +266,8 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Extra Pandoc arguments")
-      .setDesc("Additional command-line arguments passed to Pandoc")
+      .setName("Extra pandoc arguments")
+      .setDesc("Additional command-line arguments passed to pandoc")
       .addText((text) =>
         text
           .setPlaceholder("--pdf-engine-opt=--enable-local-file-access")

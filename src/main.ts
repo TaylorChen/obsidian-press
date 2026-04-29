@@ -77,13 +77,13 @@ export default class ObsidianPressPlugin extends Plugin {
 
     this.addCommand({
       id: "export-current-note-docx",
-      name: "Export current note to DOCX",
+      name: "Export current note to docx",
       callback: () => void this.exportCurrentNote("docx"),
     });
 
     this.addCommand({
       id: "export-current-note-docx-choose-folder",
-      name: "Export current note to DOCX...",
+      name: "Export current note to docx...",
       callback: () => void this.exportCurrentNoteWithDirectory("docx"),
     });
 
@@ -216,7 +216,7 @@ export default class ObsidianPressPlugin extends Plugin {
   private async exportCurrentNote(forceFormat?: OutputFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new Notice("No active markdown file");
+      new Notice("No active Markdown file");
       return;
     }
 
@@ -228,7 +228,7 @@ export default class ObsidianPressPlugin extends Plugin {
   private async exportCurrentNoteWithDirectory(forceFormat?: OutputFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new Notice("No active markdown file");
+      new Notice("No active Markdown file");
       return;
     }
 
@@ -450,7 +450,7 @@ export default class ObsidianPressPlugin extends Plugin {
       const dialog = remote?.dialog || electronDialog;
 
       if (!dialog.showOpenDialog) {
-        new Notice("Folder selection is not available in this obsidian window", 8000);
+        new Notice("Folder selection is not available in this Obsidian window", 8000);
         return null;
       }
 

@@ -75,14 +75,14 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    new import_obsidian.Setting(containerEl).setName("Pandoc path").setDesc("Path to the Pandoc binary").addText(
-      (text) => text.setPlaceholder("/opt/Homebrew/bin/Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (value) => {
+    new import_obsidian.Setting(containerEl).setName("Pandoc path").setDesc("Path to the pandoc binary").addText(
+      (text) => text.setPlaceholder("/opt/homebrew/bin/pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (value) => {
         this.plugin.settings.pandocPath = value || "/opt/homebrew/bin/pandoc";
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("PDF engine").setDesc("The PDF rendering engine to use").addDropdown(
-      (dropdown) => dropdown.addOption("xelatex", "XeLaTeX (best quality)").addOption("pdflatex", "pdfLaTeX (auto XeLaTeX for CJK)").addOption("lualatex", "LuaLaTeX").addOption("wkhtmltopdf", "Wkhtmltopdf (lightweight)").addOption("weasyprint", "WeasyPrint (CSS-based)").addOption("typst", "Typst (experimental)").setValue(this.plugin.settings.pdfEngine).onChange(async (value) => {
+      (dropdown) => dropdown.addOption("xelatex", "Xelatex (best quality)").addOption("pdflatex", "Pdflatex (auto xelatex for cjk)").addOption("lualatex", "Lualatex").addOption("wkhtmltopdf", "Wkhtmltopdf (lightweight)").addOption("weasyprint", "Weasyprint (CSS-based)").addOption("typst", "Typst (experimental)").setValue(this.plugin.settings.pdfEngine).onChange(async (value) => {
         this.plugin.settings.pdfEngine = value;
         await this.plugin.saveSettings();
       })
@@ -142,15 +142,15 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("CJK font").setDesc(
-      "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable XeLaTeX choice."
+    new import_obsidian.Setting(containerEl).setName("Cjk font").setDesc(
+      "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable xelatex choice."
     ).addText(
-      (text) => text.setPlaceholder("STHeitiSC-Medium").setValue(this.plugin.settings.cjkFont).onChange(async (value) => {
+      (text) => text.setPlaceholder("Stheitisc-medium").setValue(this.plugin.settings.cjkFont).onChange(async (value) => {
         this.plugin.settings.cjkFont = value;
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("CJK support").setDesc("Add CJK font configuration for LaTeX engines").addToggle(
+    new import_obsidian.Setting(containerEl).setName("Cjk support").setDesc("Add cjk font configuration for LaTeX engines").addToggle(
       (toggle) => toggle.setValue(this.plugin.settings.enableCjk).onChange(async (value) => {
         this.plugin.settings.enableCjk = value;
         await this.plugin.saveSettings();
@@ -165,7 +165,7 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("Custom Pandoc template").setDesc("Path to custom Pandoc template file").addText(
+    new import_obsidian.Setting(containerEl).setName("Custom pandoc template").setDesc("Path to custom pandoc template file").addText(
       (text) => text.setPlaceholder("templates/custom.html").setValue(this.plugin.settings.customTemplatePath).onChange(async (value) => {
         this.plugin.settings.customTemplatePath = value;
         await this.plugin.saveSettings();
@@ -183,7 +183,7 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("Extra Pandoc arguments").setDesc("Additional command-line arguments passed to Pandoc").addText(
+    new import_obsidian.Setting(containerEl).setName("Extra pandoc arguments").setDesc("Additional command-line arguments passed to pandoc").addText(
       (text) => text.setPlaceholder("--pdf-engine-opt=--enable-local-file-access").setValue(this.plugin.settings.extraArgs).onChange(async (value) => {
         this.plugin.settings.extraArgs = value;
         await this.plugin.saveSettings();
@@ -1706,12 +1706,12 @@ var ObsidianPressPlugin = class extends import_obsidian5.Plugin {
     });
     this.addCommand({
       id: "export-current-note-docx",
-      name: "Export current note to DOCX",
+      name: "Export current note to docx",
       callback: () => void this.exportCurrentNote("docx")
     });
     this.addCommand({
       id: "export-current-note-docx-choose-folder",
-      name: "Export current note to DOCX...",
+      name: "Export current note to docx...",
       callback: () => void this.exportCurrentNoteWithDirectory("docx")
     });
     this.addCommand({
@@ -1812,7 +1812,7 @@ var ObsidianPressPlugin = class extends import_obsidian5.Plugin {
   async exportCurrentNote(forceFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new import_obsidian5.Notice("No active markdown file");
+      new import_obsidian5.Notice("No active Markdown file");
       return;
     }
     const format = forceFormat || this.settings.defaultFormat;
@@ -1822,7 +1822,7 @@ var ObsidianPressPlugin = class extends import_obsidian5.Plugin {
   async exportCurrentNoteWithDirectory(forceFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new import_obsidian5.Notice("No active markdown file");
+      new import_obsidian5.Notice("No active Markdown file");
       return;
     }
     await this.exportSpecificFileWithDirectory(
@@ -2003,7 +2003,7 @@ ${check.errors.join("\n")}`, 8e3);
     try {
       const dialog = ((_a = import_electron.remote) == null ? void 0 : _a.dialog) || import_electron.dialog;
       if (!dialog.showOpenDialog) {
-        new import_obsidian5.Notice("Folder selection is not available in this obsidian window", 8e3);
+        new import_obsidian5.Notice("Folder selection is not available in this Obsidian window", 8e3);
         return null;
       }
       const result = await dialog.showOpenDialog({

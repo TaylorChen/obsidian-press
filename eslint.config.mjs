@@ -12,22 +12,6 @@ export default defineConfig([
     },
     rules: {
       "obsidianmd/no-nodejs-modules": "off",
-      "obsidianmd/ui/sentence-case": [
-        "warn",
-        {
-          acronyms: ["PDF", "DOCX", "HTML", "CSS", "CLI", "CJK"],
-          brands: [
-            "Pandoc",
-            "XeLaTeX",
-            "pdfLaTeX",
-            "LuaLaTeX",
-            "WeasyPrint",
-            "Typst",
-            "Mermaid",
-            "Homebrew",
-          ],
-        },
-      ],
     },
   },
 ]);
