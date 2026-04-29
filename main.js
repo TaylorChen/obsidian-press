@@ -37,7 +37,8 @@ __export(main_exports, {
   default: () => ObsidianPressPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
+var import_electron = require("electron");
 var path5 = __toESM(require("path"));
 
 // src/types.ts
@@ -74,36 +75,35 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    new import_obsidian.Setting(containerEl).setName("General").setHeading();
-    new import_obsidian.Setting(containerEl).setName("Pandoc path").setDesc("Path to the pandoc binary").addText(
-      (text) => text.setPlaceholder("/opt/homebrew/bin/pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (value) => {
+    new import_obsidian.Setting(containerEl).setName("Pandoc path").setDesc("Path to the Pandoc binary").addText(
+      (text) => text.setPlaceholder("/opt/Homebrew/bin/Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (value) => {
         this.plugin.settings.pandocPath = value || "/opt/homebrew/bin/pandoc";
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("PDF engine").setDesc("The PDF rendering engine to use").addDropdown(
-      (dropdown) => dropdown.addOption("xelatex", "XeLaTeX (best quality)").addOption("pdflatex", "pdfLaTeX (auto XeLaTeX for CJK)").addOption("lualatex", "LuaLaTeX").addOption("wkhtmltopdf", "wkhtmltopdf (lightweight)").addOption("weasyprint", "WeasyPrint (CSS-based)").addOption("typst", "Typst (experimental)").setValue(this.plugin.settings.pdfEngine).onChange(async (value) => {
+      (dropdown) => dropdown.addOption("xelatex", "XeLaTeX (best quality)").addOption("pdflatex", "pdfLaTeX (auto XeLaTeX for CJK)").addOption("lualatex", "LuaLaTeX").addOption("wkhtmltopdf", "Wkhtmltopdf (lightweight)").addOption("weasyprint", "WeasyPrint (CSS-based)").addOption("typst", "Typst (experimental)").setValue(this.plugin.settings.pdfEngine).onChange(async (value) => {
         this.plugin.settings.pdfEngine = value;
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("Default format").setDesc("Default export format").addDropdown(
-      (dropdown) => dropdown.addOption("pdf", "PDF").addOption("docx", "Word (DOCX)").addOption("html", "HTML").setValue(this.plugin.settings.defaultFormat).onChange(async (value) => {
+      (dropdown) => dropdown.addOption("pdf", "PDF").addOption("docx", "DOCX").addOption("html", "HTML").setValue(this.plugin.settings.defaultFormat).onChange(async (value) => {
         this.plugin.settings.defaultFormat = value;
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("Output").setHeading();
     new import_obsidian.Setting(containerEl).setName("Output directory").setDesc(
-      "Relative to vault root, or absolute path. Leave empty for 'pdf' folder"
+      "Relative to vault root, or absolute path. Leave empty for 'PDF' folder"
     ).addText(
-      (text) => text.setPlaceholder("pdf").setValue(this.plugin.settings.outputDir).onChange(async (value) => {
+      (text) => text.setPlaceholder("PDF").setValue(this.plugin.settings.outputDir).onChange(async (value) => {
         this.plugin.settings.outputDir = value || "pdf";
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("File naming").setDesc("How output files are named").addDropdown(
-      (dropdown) => dropdown.addOption("same", "Same as source (note.pdf)").addOption("timestamp", "With timestamp (note_2024-01-01T00-00-00.pdf)").addOption("suffix", "With suffix (note_export.pdf)").setValue(this.plugin.settings.outputNaming).onChange(async (value) => {
+      (dropdown) => dropdown.addOption("same", "Same as source (note.pdf)").addOption("timestamp", "With timestamp (note_2024-01-01t00-00-00.pdf)").addOption("suffix", "With suffix (note_export.pdf)").setValue(this.plugin.settings.outputNaming).onChange(async (value) => {
         this.plugin.settings.outputNaming = value;
         await this.plugin.saveSettings();
       })
@@ -137,20 +137,20 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
       })
     );
     new import_obsidian.Setting(containerEl).setName("Code highlight theme").setDesc("Syntax highlighting theme for code blocks").addDropdown(
-      (dropdown) => dropdown.addOption("tango", "Tango (default)").addOption("pygments", "Pygments (minimal background)").addOption("zenburn", "Zenburn").addOption("breezedark", "Breeze Dark").addOption("kate", "Kate").addOption("monochrome", "Monochrome").setValue(this.plugin.settings.codeTheme).onChange(async (value) => {
+      (dropdown) => dropdown.addOption("tango", "Tango (default)").addOption("pygments", "Pygments (minimal background)").addOption("zenburn", "Zenburn").addOption("breezedark", "Breeze dark").addOption("kate", "Kate").addOption("monochrome", "Monochrome").setValue(this.plugin.settings.codeTheme).onChange(async (value) => {
         this.plugin.settings.codeTheme = value;
         await this.plugin.saveSettings();
       })
     );
     new import_obsidian.Setting(containerEl).setName("CJK font").setDesc(
-      "Chinese/Japanese/Korean font name. On macOS, STHeitiSC-Medium is a reliable XeLaTeX choice."
+      "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable XeLaTeX choice."
     ).addText(
       (text) => text.setPlaceholder("STHeitiSC-Medium").setValue(this.plugin.settings.cjkFont).onChange(async (value) => {
         this.plugin.settings.cjkFont = value;
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("Enable CJK support").setDesc("Add CJK font configuration for LaTeX engines").addToggle(
+    new import_obsidian.Setting(containerEl).setName("CJK support").setDesc("Add CJK font configuration for LaTeX engines").addToggle(
       (toggle) => toggle.setValue(this.plugin.settings.enableCjk).onChange(async (value) => {
         this.plugin.settings.enableCjk = value;
         await this.plugin.saveSettings();
@@ -172,7 +172,7 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
       })
     );
     new import_obsidian.Setting(containerEl).setName("Mermaid CLI path").setDesc("Path to mmdc binary for Mermaid diagram rendering").addText(
-      (text) => text.setPlaceholder("mmdc").setValue(this.plugin.settings.mermaidPath).onChange(async (value) => {
+      (text) => text.setPlaceholder("Mmdc").setValue(this.plugin.settings.mermaidPath).onChange(async (value) => {
         this.plugin.settings.mermaidPath = value || "mmdc";
         await this.plugin.saveSettings();
       })
@@ -189,7 +189,7 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    new import_obsidian.Setting(containerEl).setName("Batch Export").setHeading();
+    new import_obsidian.Setting(containerEl).setName("Batch export").setHeading();
     new import_obsidian.Setting(containerEl).setName("Concurrency").setDesc("Number of files to export in parallel").addText(
       (text) => text.setPlaceholder("3").setValue(String(this.plugin.settings.concurrency)).onChange(async (value) => {
         const num = parseInt(value, 10);
@@ -209,15 +209,16 @@ var ObsidianPressSettingTab = class extends import_obsidian.PluginSettingTab {
 };
 
 // src/exporter.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 var path4 = __toESM(require("path"));
 var fs4 = __toESM(require("fs"));
 var import_child_process3 = require("child_process");
 
 // src/renderer.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // src/utils.ts
+var import_obsidian2 = require("obsidian");
 var import_child_process = require("child_process");
 var path = __toESM(require("path"));
 var fs = __toESM(require("fs"));
@@ -247,10 +248,13 @@ function runCommand(cmd, options) {
   });
 }
 function getVaultPath(app) {
-  return app.vault.adapter.basePath;
+  if (app.vault.adapter instanceof import_obsidian2.FileSystemAdapter) {
+    return app.vault.adapter.getBasePath();
+  }
+  throw new Error("Press PDF Export requires the desktop file system adapter.");
 }
 function resolveAttachmentPath(src, currentFile, app) {
-  var _a, _b;
+  var _a;
   const vaultPath = getVaultPath(app);
   if (path.isAbsolute(src)) {
     return src;
@@ -271,8 +275,9 @@ function resolveAttachmentPath(src, currentFile, app) {
   if (fs.existsSync(absRoot)) {
     return absRoot;
   }
-  const attachmentFolder = (_b = (_a = app.vault).getConfig) == null ? void 0 : _b.call(_a, "attachmentFolderPath");
-  if (attachmentFolder) {
+  const vaultConfig = app.vault;
+  const attachmentFolder = (_a = vaultConfig.getConfig) == null ? void 0 : _a.call(vaultConfig, "attachmentFolderPath");
+  if (typeof attachmentFolder === "string" && attachmentFolder) {
     const absAttachment = path.join(vaultPath, attachmentFolder, src);
     if (fs.existsSync(absAttachment)) {
       return absAttachment;
@@ -286,10 +291,11 @@ async function checkCommandExists(cmd) {
   const { code } = await runCommand(checkCmd);
   return code === 0;
 }
-function getTmpDir(vaultPath) {
+function getTmpDir(app) {
+  const vaultPath = getVaultPath(app);
   const tmpDir = path.join(
     vaultPath,
-    ".obsidian",
+    app.vault.configDir,
     "plugins",
     "press-pdf-export",
     "tmp"
@@ -326,10 +332,11 @@ function getOutputPath(file, vaultPath, outputDir, naming, format) {
   const baseName = path.basename(file.path, ".md");
   let fileName;
   switch (naming) {
-    case "timestamp":
+    case "timestamp": {
       const ts = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
       fileName = `${baseName}_${ts}.${format}`;
       break;
+    }
     case "suffix":
       fileName = `${baseName}_export.${format}`;
       break;
@@ -421,8 +428,7 @@ var CALLOUT_ICONS = {
   bug: "\u{1F41B}"
 };
 async function renderToPandoc(content, file, app, mermaidPath, mermaidTheme) {
-  const vaultPath = getVaultPath(app);
-  const tmpDir = getTmpDir(vaultPath);
+  const tmpDir = getTmpDir(app);
   const tempFiles = [];
   let rendered = stripFrontmatter(content);
   rendered = formatFlattenedCodeBlocks(rendered);
@@ -437,7 +443,7 @@ async function renderToPandoc(content, file, app, mermaidPath, mermaidTheme) {
   rendered = protectedCode.content;
   rendered = convertCallouts(rendered);
   rendered = convertWikilinks(rendered, file, app);
-  rendered = await convertEmbeds(rendered, file, app);
+  rendered = convertEmbeds(rendered, file, app);
   rendered = await inlineNoteEmbeds(rendered, file, app, 0, 5);
   rendered = convertHighlights(rendered);
   rendered = convertSupSub(rendered);
@@ -538,15 +544,24 @@ function indentFormattedCode(code) {
   const output = [];
   let level = 0;
   for (const line of lines) {
-    if (/^[}\])]/.test(line)) {
+    if (line.startsWith("}") || line.startsWith("]") || line.startsWith(")")) {
       level = Math.max(0, level - 1);
     }
     output.push(`${"  ".repeat(level)}${line}`);
-    const opens = (line.match(/[{\[(]/g) || []).length;
-    const closes = (line.match(/[}\])]/g) || []).length;
+    const opens = countCharacters(line, "{[(");
+    const closes = countCharacters(line, "}])");
     level = Math.max(0, level + opens - closes);
   }
   return output.join("\n");
+}
+function countCharacters(value, characters) {
+  let count = 0;
+  for (const char of value) {
+    if (characters.includes(char)) {
+      count++;
+    }
+  }
+  return count;
 }
 function protectCodeSegments(content) {
   const segments = /* @__PURE__ */ new Map();
@@ -596,7 +611,7 @@ function convertCallouts(content) {
       const icon = CALLOUT_ICONS[cssType] || "\u{1F4DD}";
       const displayTitle = (title || cssType).trim();
       const lines = match.split("\n");
-      const bodyLines = lines.map((line) => line.replace(/^>\s?/, "")).filter((line, i) => {
+      const bodyLines = lines.map((line) => line.replace(/^>\s?/, "")).filter((_line, i) => {
         if (i === 0) return false;
         return true;
       });
@@ -634,7 +649,7 @@ function convertWikilinks(content, file, app) {
     }
   );
 }
-async function convertEmbeds(content, file, app) {
+function convertEmbeds(content, file, app) {
   const embedRegex = /!\[\[([^\]|]+?)(?:\|(\d+))?\]\]/g;
   let result = content;
   let match;
@@ -664,7 +679,7 @@ async function inlineNoteEmbeds(content, currentFile, app, depth, maxDepth) {
       target,
       currentFile.path
     );
-    if (resolvedFile instanceof import_obsidian2.TFile && resolvedFile.extension === "md") {
+    if (resolvedFile instanceof import_obsidian3.TFile && resolvedFile.extension === "md") {
       const embedContent = await app.vault.read(resolvedFile);
       const processed = await inlineNoteEmbeds(
         embedContent,
@@ -693,7 +708,7 @@ function convertHighlights(content) {
   return content.replace(/==([^=]+)==/g, "<mark>$1</mark>");
 }
 function convertSupSub(content) {
-  let result = content.replace(/\^([^\^]+)\^/g, "<sup>$1</sup>");
+  let result = content.replace(/\^([^^]+)\^/g, "<sup>$1</sup>");
   result = result.replace(/~~([^~]+)~~/g, "<sub>$1</sub>");
   return result;
 }
@@ -708,7 +723,7 @@ function convertImageSizes(content) {
     }
   );
 }
-async function convertMermaidBlocks(content, mermaidPath, mermaidTheme, tmpDir, tempFiles) {
+async function convertMermaidBlocks(content, _mermaidPath, mermaidTheme, tmpDir, tempFiles) {
   const mermaidRegex = /```mermaid\n([\s\S]*?)```/g;
   let result = content;
   let match;
@@ -919,7 +934,7 @@ async function exportWithPandoc(options) {
   }
   const args = buildPandocArgs(options);
   return new Promise((resolve) => {
-    var _a, _b;
+    var _a;
     const child = (0, import_child_process2.spawn)(pandocPath, args, {
       shell: false,
       cwd: options.tempDir,
@@ -937,12 +952,8 @@ async function exportWithPandoc(options) {
         LC_ALL: process.env.LC_ALL || "en_US.UTF-8"
       }
     });
-    let stdout = "";
     let stderr = "";
-    (_a = child.stdout) == null ? void 0 : _a.on("data", (data) => {
-      stdout += data.toString();
-    });
-    (_b = child.stderr) == null ? void 0 : _b.on("data", (data) => {
+    (_a = child.stderr) == null ? void 0 : _a.on("data", (data) => {
       stderr += data.toString();
     });
     child.on("close", (code) => {
@@ -1038,7 +1049,7 @@ async function checkPandocAvailable(pandocPath) {
     });
     child.on("close", (code) => {
       if (code === 0) {
-        const versionMatch = stdout.match(/pandoc\s+(\d+\.\d+[\.\d]*)/);
+        const versionMatch = stdout.match(/pandoc\s+(\d+\.\d+[.\d]*)/);
         resolve({
           available: true,
           version: versionMatch ? versionMatch[1] : "unknown"
@@ -1056,7 +1067,7 @@ async function checkPandocAvailable(pandocPath) {
 // src/exporter.ts
 async function exportFile(file, app, settings) {
   const vaultPath = getVaultPath(app);
-  const tmpDir = getTmpDir(vaultPath);
+  const tmpDir = getTmpDir(app);
   try {
     const content = await app.vault.read(file);
     const effectivePdfEngine = settings.defaultFormat === "pdf" && settings.pdfEngine === "pdflatex" && containsCjk(content) ? "xelatex" : settings.pdfEngine;
@@ -1234,9 +1245,9 @@ async function exportBatch(files, app, settings, onProgress) {
 }
 function collectMarkdownFiles(folder, files) {
   for (const child of folder.children) {
-    if (child instanceof import_obsidian3.TFile && child.extension === "md") {
+    if (child instanceof import_obsidian4.TFile && child.extension === "md") {
       files.push(child);
-    } else if (child instanceof import_obsidian3.TFolder) {
+    } else if (child instanceof import_obsidian4.TFolder) {
       collectMarkdownFiles(child, files);
     }
   }
@@ -1465,7 +1476,7 @@ async function copyLocalImageForTypst(rawPath, file, vaultPath, tmpDir, index) {
   return outputPath;
 }
 async function downloadRemoteImage(url) {
-  const response = await (0, import_obsidian3.requestUrl)({
+  const response = await (0, import_obsidian4.requestUrl)({
     url,
     method: "GET",
     headers: {
@@ -1645,18 +1656,18 @@ async function preflightChecks(settings) {
 // src/main.ts
 var ExportProgressNotice = class {
   constructor(title, detail = "") {
-    this.notice = new import_obsidian4.Notice("", 0);
-    this.notice.noticeEl.empty();
-    this.notice.noticeEl.addClass("obsidian-press-progress-notice");
-    this.titleEl = this.notice.noticeEl.createDiv({
+    this.notice = new import_obsidian5.Notice("", 0);
+    this.notice.messageEl.empty();
+    this.notice.messageEl.addClass("obsidian-press-progress-notice");
+    this.titleEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-title",
       text: title
     });
-    this.detailEl = this.notice.noticeEl.createDiv({
+    this.detailEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-detail",
       text: detail
     });
-    const barEl = this.notice.noticeEl.createDiv({
+    const barEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-bar"
     });
     this.fillEl = barEl.createDiv({
@@ -1677,41 +1688,41 @@ var ExportProgressNotice = class {
     this.fillEl.style.width = `${normalized}%`;
   }
 };
-var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
+var ObsidianPressPlugin = class extends import_obsidian5.Plugin {
   async onload() {
     await this.loadSettings();
-    this.addRibbonIcon("file-output", "Press PDF Export: Export current note", () => {
-      this.exportCurrentNote();
+    this.addRibbonIcon("file-output", "Export current note", () => {
+      void this.exportCurrentNote();
     });
     this.addCommand({
       id: "export-current-note-pdf",
       name: "Export current note to PDF",
-      callback: () => this.exportCurrentNote()
+      callback: () => void this.exportCurrentNote()
     });
     this.addCommand({
       id: "export-current-note-pdf-choose-folder",
       name: "Export current note to PDF...",
-      callback: () => this.exportCurrentNoteWithDirectory("pdf")
+      callback: () => void this.exportCurrentNoteWithDirectory("pdf")
     });
     this.addCommand({
       id: "export-current-note-docx",
-      name: "Export current note to Word (DOCX)",
-      callback: () => this.exportCurrentNote("docx")
+      name: "Export current note to DOCX",
+      callback: () => void this.exportCurrentNote("docx")
     });
     this.addCommand({
       id: "export-current-note-docx-choose-folder",
-      name: "Export current note to Word (DOCX)...",
-      callback: () => this.exportCurrentNoteWithDirectory("docx")
+      name: "Export current note to DOCX...",
+      callback: () => void this.exportCurrentNoteWithDirectory("docx")
     });
     this.addCommand({
       id: "export-current-note-html",
       name: "Export current note to HTML",
-      callback: () => this.exportCurrentNote("html")
+      callback: () => void this.exportCurrentNote("html")
     });
     this.addCommand({
       id: "export-current-note-html-choose-folder",
       name: "Export current note to HTML...",
-      callback: () => this.exportCurrentNoteWithDirectory("html")
+      callback: () => void this.exportCurrentNoteWithDirectory("html")
     });
     this.addCommand({
       id: "export-folder",
@@ -1720,9 +1731,9 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
         const file = this.app.workspace.getActiveFile();
         if (file) {
           const folder = file.parent;
-          if (folder && folder instanceof import_obsidian4.TFolder) {
+          if (folder && folder instanceof import_obsidian5.TFolder) {
             if (!checking) {
-              this.exportFolder(folder);
+              void this.exportFolder(folder);
             }
             return true;
           }
@@ -1737,9 +1748,9 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
         const file = this.app.workspace.getActiveFile();
         if (file) {
           const folder = file.parent;
-          if (folder && folder instanceof import_obsidian4.TFolder) {
+          if (folder && folder instanceof import_obsidian5.TFolder) {
             if (!checking) {
-              this.exportFolderWithDirectory(folder);
+              void this.exportFolderWithDirectory(folder);
             }
             return true;
           }
@@ -1750,29 +1761,29 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
     this.addCommand({
       id: "export-vault",
       name: "Export entire vault",
-      callback: () => this.exportEntireVault()
+      callback: () => void this.exportEntireVault()
     });
     this.addCommand({
       id: "export-vault-choose-folder",
       name: "Export entire vault...",
-      callback: () => this.exportEntireVaultWithDirectory()
+      callback: () => void this.exportEntireVaultWithDirectory()
     });
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian4.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian5.TFile && file.extension === "md") {
           menu.addItem((item) => {
-            item.setTitle("\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("file-output").onClick(() => this.exportSpecificFile(file));
+            item.setTitle("\u5BFC\u51FA\u4E3A PDF").setIcon("file-output").onClick(() => void this.exportSpecificFile(file));
           });
           menu.addItem((item) => {
-            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("folder-open").onClick(() => this.exportSpecificFileWithDirectory(file, "pdf"));
+            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5BFC\u51FA\u4E3A PDF").setIcon("folder-open").onClick(() => void this.exportSpecificFileWithDirectory(file, "pdf"));
           });
         }
-        if (file instanceof import_obsidian4.TFolder) {
+        if (file instanceof import_obsidian5.TFolder) {
           menu.addItem((item) => {
-            item.setTitle("\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("file-output").onClick(() => this.exportFolder(file));
+            item.setTitle("\u5168\u90E8\u5BFC\u51FA\u4E3A PDF").setIcon("file-output").onClick(() => void this.exportFolder(file));
           });
           menu.addItem((item) => {
-            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("folder-open").onClick(() => this.exportFolderWithDirectory(file));
+            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5168\u90E8\u5BFC\u51FA\u4E3A PDF").setIcon("folder-open").onClick(() => void this.exportFolderWithDirectory(file));
           });
         }
       })
@@ -1782,7 +1793,9 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
   onunload() {
   }
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const loadedData = await this.loadData();
+    const savedSettings = loadedData && typeof loadedData === "object" ? loadedData : {};
+    this.settings = { ...DEFAULT_SETTINGS, ...savedSettings };
     if (this.settings.pdfEngine === "chromium") {
       this.settings.pdfEngine = "xelatex";
       await this.saveSettings();
@@ -1799,7 +1812,7 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
   async exportCurrentNote(forceFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new import_obsidian4.Notice("No active Markdown file");
+      new import_obsidian5.Notice("No active markdown file");
       return;
     }
     const format = forceFormat || this.settings.defaultFormat;
@@ -1809,7 +1822,7 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
   async exportCurrentNoteWithDirectory(forceFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new import_obsidian4.Notice("No active Markdown file");
+      new import_obsidian5.Notice("No active markdown file");
       return;
     }
     await this.exportSpecificFileWithDirectory(
@@ -1832,7 +1845,7 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
     const settings = overrideSettings || this.settings;
     const check = await preflightChecks(settings);
     if (!check.ok) {
-      new import_obsidian4.Notice(`Export failed:
+      new import_obsidian5.Notice(`Export failed:
 ${check.errors.join("\n")}`, 8e3);
       return;
     }
@@ -1847,7 +1860,7 @@ ${check.errors.join("\n")}`, 8e3);
       progress.update(`\u6B63\u5728\u5BFC\u51FA ${formatLabel}`, "\u5199\u5165\u5BFC\u51FA\u6587\u4EF6...", 90);
       progress.hide();
       if (result.success) {
-        new import_obsidian4.Notice(
+        new import_obsidian5.Notice(
           `Exported: ${result.outputPath}
 (${(result.duration / 1e3).toFixed(1)}s)`
         );
@@ -1855,11 +1868,11 @@ ${check.errors.join("\n")}`, 8e3);
           window.open(`file://${result.outputPath}`);
         }
       } else {
-        new import_obsidian4.Notice(`Export failed: ${result.error}`, 8e3);
+        new import_obsidian5.Notice(`Export failed: ${result.error}`, 8e3);
       }
     } catch (err) {
       progress.hide();
-      new import_obsidian4.Notice(
+      new import_obsidian5.Notice(
         `Export error: ${err instanceof Error ? err.message : String(err)}`,
         8e3
       );
@@ -1869,7 +1882,7 @@ ${check.errors.join("\n")}`, 8e3);
     const settings = overrideSettings || this.settings;
     const check = await preflightChecks(settings);
     if (!check.ok) {
-      new import_obsidian4.Notice(`Export failed:
+      new import_obsidian5.Notice(`Export failed:
 ${check.errors.join("\n")}`, 8e3);
       return;
     }
@@ -1899,13 +1912,13 @@ ${check.errors.join("\n")}`, 8e3);
         `Output: ${result.outputDir}`,
         `Time: ${(result.duration / 1e3).toFixed(1)}s`
       ].join("\n");
-      new import_obsidian4.Notice(summary, 1e4);
+      new import_obsidian5.Notice(summary, 1e4);
       if (result.failed > 0 && result.errors.length > 0) {
         console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();
-      new import_obsidian4.Notice(
+      new import_obsidian5.Notice(
         `Export error: ${err instanceof Error ? err.message : String(err)}`,
         8e3
       );
@@ -1925,7 +1938,7 @@ ${check.errors.join("\n")}`, 8e3);
     const settings = overrideSettings || this.settings;
     const check = await preflightChecks(settings);
     if (!check.ok) {
-      new import_obsidian4.Notice(`Export failed:
+      new import_obsidian5.Notice(`Export failed:
 ${check.errors.join("\n")}`, 8e3);
       return;
     }
@@ -1954,13 +1967,13 @@ ${check.errors.join("\n")}`, 8e3);
         `Output: ${result.outputDir}`,
         `Time: ${(result.duration / 1e3).toFixed(1)}s`
       ].join("\n");
-      new import_obsidian4.Notice(summary, 1e4);
+      new import_obsidian5.Notice(summary, 1e4);
       if (result.failed > 0 && result.errors.length > 0) {
         console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();
-      new import_obsidian4.Notice(
+      new import_obsidian5.Notice(
         `Export error: ${err instanceof Error ? err.message : String(err)}`,
         8e3
       );
@@ -1983,15 +1996,14 @@ ${check.errors.join("\n")}`, 8e3);
   }
   async chooseOutputDirectory() {
     var _a, _b;
-    if (!import_obsidian4.Platform.isDesktopApp) {
-      new import_obsidian4.Notice("Folder selection is only available in the desktop app", 8e3);
+    if (!import_obsidian5.Platform.isDesktopApp) {
+      new import_obsidian5.Notice("Folder selection is only available in the desktop app", 8e3);
       return null;
     }
     try {
-      const electron = require("electron");
-      const dialog = ((_a = electron.remote) == null ? void 0 : _a.dialog) || electron.dialog;
-      if (!(dialog == null ? void 0 : dialog.showOpenDialog)) {
-        new import_obsidian4.Notice("Folder selection is not available in this Obsidian window", 8e3);
+      const dialog = ((_a = import_electron.remote) == null ? void 0 : _a.dialog) || import_electron.dialog;
+      if (!dialog.showOpenDialog) {
+        new import_obsidian5.Notice("Folder selection is not available in this obsidian window", 8e3);
         return null;
       }
       const result = await dialog.showOpenDialog({
@@ -2000,12 +2012,12 @@ ${check.errors.join("\n")}`, 8e3);
         properties: ["openDirectory", "createDirectory"]
       });
       if (result.canceled || !((_b = result.filePaths) == null ? void 0 : _b[0])) {
-        new import_obsidian4.Notice("Export canceled");
+        new import_obsidian5.Notice("Export canceled");
         return null;
       }
       return result.filePaths[0];
     } catch (err) {
-      new import_obsidian4.Notice(
+      new import_obsidian5.Notice(
         `Could not open folder picker: ${err instanceof Error ? err.message : String(err)}`,
         8e3
       );

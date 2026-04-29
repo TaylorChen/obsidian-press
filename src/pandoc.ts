@@ -215,12 +215,8 @@ export async function exportWithPandoc(
       },
     });
 
-    let stdout = "";
     let stderr = "";
 
-    child.stdout?.on("data", (data: Buffer) => {
-      stdout += data.toString();
-    });
     child.stderr?.on("data", (data: Buffer) => {
       stderr += data.toString();
     });
@@ -340,7 +336,7 @@ export async function checkPandocAvailable(
 
     child.on("close", (code) => {
       if (code === 0) {
-        const versionMatch = stdout.match(/pandoc\s+(\d+\.\d+[\.\d]*)/);
+        const versionMatch = stdout.match(/pandoc\s+(\d+\.\d+[.\d]*)/);
         resolve({
           available: true,
           version: versionMatch ? versionMatch[1] : "unknown",

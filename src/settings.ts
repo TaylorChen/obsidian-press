@@ -1,6 +1,13 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import ObsidianPressPlugin from "./main";
-import { PdfEngine, PageSize, CodeTheme, MermaidTheme } from "./types";
+import {
+  PdfEngine,
+  PageSize,
+  CodeTheme,
+  MermaidTheme,
+  OutputFormat,
+  OutputNaming,
+} from "./types";
 
 export class ObsidianPressSettingTab extends PluginSettingTab {
   plugin: ObsidianPressPlugin;
@@ -14,15 +21,12 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    // === General ===
-    new Setting(containerEl).setName("General").setHeading();
-
     new Setting(containerEl)
       .setName("Pandoc path")
-      .setDesc("Path to the pandoc binary")
+      .setDesc("Path to the Pandoc binary")
       .addText((text) =>
         text
-          .setPlaceholder("/opt/homebrew/bin/pandoc")
+          .setPlaceholder("/opt/Homebrew/bin/Pandoc")
           .setValue(this.plugin.settings.pandocPath)
           .onChange(async (value) => {
             this.plugin.settings.pandocPath = value || "/opt/homebrew/bin/pandoc";
@@ -38,7 +42,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
           .addOption("xelatex", "XeLaTeX (best quality)")
           .addOption("pdflatex", "pdfLaTeX (auto XeLaTeX for CJK)")
           .addOption("lualatex", "LuaLaTeX")
-          .addOption("wkhtmltopdf", "wkhtmltopdf (lightweight)")
+          .addOption("wkhtmltopdf", "Wkhtmltopdf (lightweight)")
           .addOption("weasyprint", "WeasyPrint (CSS-based)")
           .addOption("typst", "Typst (experimental)")
           .setValue(this.plugin.settings.pdfEngine)
@@ -54,11 +58,11 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       .addDropdown((dropdown) =>
         dropdown
           .addOption("pdf", "PDF")
-          .addOption("docx", "Word (DOCX)")
+          .addOption("docx", "DOCX")
           .addOption("html", "HTML")
           .setValue(this.plugin.settings.defaultFormat)
           .onChange(async (value: string) => {
-            this.plugin.settings.defaultFormat = value as any;
+            this.plugin.settings.defaultFormat = value as OutputFormat;
             await this.plugin.saveSettings();
           })
       );
@@ -69,11 +73,11 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Output directory")
       .setDesc(
-        "Relative to vault root, or absolute path. Leave empty for 'pdf' folder"
+        "Relative to vault root, or absolute path. Leave empty for 'PDF' folder"
       )
       .addText((text) =>
         text
-          .setPlaceholder("pdf")
+          .setPlaceholder("PDF")
           .setValue(this.plugin.settings.outputDir)
           .onChange(async (value) => {
             this.plugin.settings.outputDir = value || "pdf";
@@ -87,11 +91,11 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       .addDropdown((dropdown) =>
         dropdown
           .addOption("same", "Same as source (note.pdf)")
-          .addOption("timestamp", "With timestamp (note_2024-01-01T00-00-00.pdf)")
+          .addOption("timestamp", "With timestamp (note_2024-01-01t00-00-00.pdf)")
           .addOption("suffix", "With suffix (note_export.pdf)")
           .setValue(this.plugin.settings.outputNaming)
           .onChange(async (value: string) => {
-            this.plugin.settings.outputNaming = value as any;
+            this.plugin.settings.outputNaming = value as OutputNaming;
             await this.plugin.saveSettings();
           })
       );
@@ -164,7 +168,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
           .addOption("tango", "Tango (default)")
           .addOption("pygments", "Pygments (minimal background)")
           .addOption("zenburn", "Zenburn")
-          .addOption("breezedark", "Breeze Dark")
+          .addOption("breezedark", "Breeze dark")
           .addOption("kate", "Kate")
           .addOption("monochrome", "Monochrome")
           .setValue(this.plugin.settings.codeTheme)
@@ -177,7 +181,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("CJK font")
       .setDesc(
-        "Chinese/Japanese/Korean font name. On macOS, STHeitiSC-Medium is a reliable XeLaTeX choice."
+        "Chinese/japanese/korean font name. On macOS, stheitisc-medium is a reliable XeLaTeX choice."
       )
       .addText((text) =>
         text
@@ -190,7 +194,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Enable CJK support")
+      .setName("CJK support")
       .setDesc("Add CJK font configuration for LaTeX engines")
       .addToggle((toggle) =>
         toggle
@@ -237,7 +241,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       .setDesc("Path to mmdc binary for Mermaid diagram rendering")
       .addText((text) =>
         text
-          .setPlaceholder("mmdc")
+          .setPlaceholder("Mmdc")
           .setValue(this.plugin.settings.mermaidPath)
           .onChange(async (value) => {
             this.plugin.settings.mermaidPath = value || "mmdc";
@@ -275,7 +279,7 @@ export class ObsidianPressSettingTab extends PluginSettingTab {
       );
 
     // === Batch ===
-    new Setting(containerEl).setName("Batch Export").setHeading();
+    new Setting(containerEl).setName("Batch export").setHeading();
 
     new Setting(containerEl)
       .setName("Concurrency")

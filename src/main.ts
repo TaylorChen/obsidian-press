@@ -1,4 +1,5 @@
 import { Plugin, TFile, TFolder, Notice, Menu, Platform } from "obsidian";
+import { dialog as electronDialog, remote } from "electron";
 import * as path from "path";
 import { PluginSettings, DEFAULT_SETTINGS, OutputFormat } from "./types";
 import { ObsidianPressSettingTab } from "./settings";
@@ -13,19 +14,19 @@ class ExportProgressNotice {
 
   constructor(title: string, detail = "") {
     this.notice = new Notice("", 0);
-    this.notice.noticeEl.empty();
-    this.notice.noticeEl.addClass("obsidian-press-progress-notice");
+    this.notice.messageEl.empty();
+    this.notice.messageEl.addClass("obsidian-press-progress-notice");
 
-    this.titleEl = this.notice.noticeEl.createDiv({
+    this.titleEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-title",
       text: title,
     });
-    this.detailEl = this.notice.noticeEl.createDiv({
+    this.detailEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-detail",
       text: detail,
     });
 
-    const barEl = this.notice.noticeEl.createDiv({
+    const barEl = this.notice.messageEl.createDiv({
       cls: "obsidian-press-progress-bar",
     });
     this.fillEl = barEl.createDiv({
@@ -57,45 +58,45 @@ export default class ObsidianPressPlugin extends Plugin {
     await this.loadSettings();
 
     // Ribbon icon — export current note
-    this.addRibbonIcon("file-output", "Press PDF Export: Export current note", () => {
-      this.exportCurrentNote();
+    this.addRibbonIcon("file-output", "Export current note", () => {
+      void this.exportCurrentNote();
     });
 
     // Commands
     this.addCommand({
       id: "export-current-note-pdf",
       name: "Export current note to PDF",
-      callback: () => this.exportCurrentNote(),
+      callback: () => void this.exportCurrentNote(),
     });
 
     this.addCommand({
       id: "export-current-note-pdf-choose-folder",
       name: "Export current note to PDF...",
-      callback: () => this.exportCurrentNoteWithDirectory("pdf"),
+      callback: () => void this.exportCurrentNoteWithDirectory("pdf"),
     });
 
     this.addCommand({
       id: "export-current-note-docx",
-      name: "Export current note to Word (DOCX)",
-      callback: () => this.exportCurrentNote("docx"),
+      name: "Export current note to DOCX",
+      callback: () => void this.exportCurrentNote("docx"),
     });
 
     this.addCommand({
       id: "export-current-note-docx-choose-folder",
-      name: "Export current note to Word (DOCX)...",
-      callback: () => this.exportCurrentNoteWithDirectory("docx"),
+      name: "Export current note to DOCX...",
+      callback: () => void this.exportCurrentNoteWithDirectory("docx"),
     });
 
     this.addCommand({
       id: "export-current-note-html",
       name: "Export current note to HTML",
-      callback: () => this.exportCurrentNote("html"),
+      callback: () => void this.exportCurrentNote("html"),
     });
 
     this.addCommand({
       id: "export-current-note-html-choose-folder",
       name: "Export current note to HTML...",
-      callback: () => this.exportCurrentNoteWithDirectory("html"),
+      callback: () => void this.exportCurrentNoteWithDirectory("html"),
     });
 
     this.addCommand({
@@ -107,7 +108,7 @@ export default class ObsidianPressPlugin extends Plugin {
           const folder = file.parent;
           if (folder && folder instanceof TFolder) {
             if (!checking) {
-              this.exportFolder(folder);
+              void this.exportFolder(folder);
             }
             return true;
           }
@@ -125,7 +126,7 @@ export default class ObsidianPressPlugin extends Plugin {
           const folder = file.parent;
           if (folder && folder instanceof TFolder) {
             if (!checking) {
-              this.exportFolderWithDirectory(folder);
+              void this.exportFolderWithDirectory(folder);
             }
             return true;
           }
@@ -137,13 +138,13 @@ export default class ObsidianPressPlugin extends Plugin {
     this.addCommand({
       id: "export-vault",
       name: "Export entire vault",
-      callback: () => this.exportEntireVault(),
+      callback: () => void this.exportEntireVault(),
     });
 
     this.addCommand({
       id: "export-vault-choose-folder",
       name: "Export entire vault...",
-      callback: () => this.exportEntireVaultWithDirectory(),
+      callback: () => void this.exportEntireVaultWithDirectory(),
     });
 
     // File menu — right-click on file
@@ -152,30 +153,30 @@ export default class ObsidianPressPlugin extends Plugin {
         if (file instanceof TFile && file.extension === "md") {
           menu.addItem((item) => {
             item
-              .setTitle("导出为 PDF（Press PDF Export）")
+              .setTitle("导出为 PDF")
               .setIcon("file-output")
-              .onClick(() => this.exportSpecificFile(file));
+              .onClick(() => void this.exportSpecificFile(file));
           });
           menu.addItem((item) => {
             item
-              .setTitle("选择目录导出为 PDF（Press PDF Export）")
+              .setTitle("选择目录导出为 PDF")
               .setIcon("folder-open")
-              .onClick(() => this.exportSpecificFileWithDirectory(file, "pdf"));
+              .onClick(() => void this.exportSpecificFileWithDirectory(file, "pdf"));
           });
         }
 
         if (file instanceof TFolder) {
           menu.addItem((item) => {
             item
-              .setTitle("全部导出为 PDF（Press PDF Export）")
+              .setTitle("全部导出为 PDF")
               .setIcon("file-output")
-              .onClick(() => this.exportFolder(file));
+              .onClick(() => void this.exportFolder(file));
           });
           menu.addItem((item) => {
             item
-              .setTitle("选择目录全部导出为 PDF（Press PDF Export）")
+              .setTitle("选择目录全部导出为 PDF")
               .setIcon("folder-open")
-              .onClick(() => this.exportFolderWithDirectory(file));
+              .onClick(() => void this.exportFolderWithDirectory(file));
           });
         }
       })
@@ -190,7 +191,12 @@ export default class ObsidianPressPlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const loadedData = (await this.loadData()) as unknown;
+    const savedSettings =
+      loadedData && typeof loadedData === "object"
+        ? (loadedData as Partial<PluginSettings>)
+        : {};
+    this.settings = { ...DEFAULT_SETTINGS, ...savedSettings };
     if ((this.settings.pdfEngine as string) === "chromium") {
       this.settings.pdfEngine = "xelatex";
       await this.saveSettings();
@@ -210,7 +216,7 @@ export default class ObsidianPressPlugin extends Plugin {
   private async exportCurrentNote(forceFormat?: OutputFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new Notice("No active Markdown file");
+      new Notice("No active markdown file");
       return;
     }
 
@@ -222,7 +228,7 @@ export default class ObsidianPressPlugin extends Plugin {
   private async exportCurrentNoteWithDirectory(forceFormat?: OutputFormat) {
     const file = this.app.workspace.getActiveFile();
     if (!file || file.extension !== "md") {
-      new Notice("No active Markdown file");
+      new Notice("No active markdown file");
       return;
     }
 
@@ -441,11 +447,10 @@ export default class ObsidianPressPlugin extends Plugin {
     }
 
     try {
-      const electron = require("electron") as any;
-      const dialog = electron.remote?.dialog || electron.dialog;
+      const dialog = remote?.dialog || electronDialog;
 
-      if (!dialog?.showOpenDialog) {
-        new Notice("Folder selection is not available in this Obsidian window", 8000);
+      if (!dialog.showOpenDialog) {
+        new Notice("Folder selection is not available in this obsidian window", 8000);
         return null;
       }
 

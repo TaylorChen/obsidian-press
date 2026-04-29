@@ -1,5 +1,5 @@
-import { App, TFile, TFolder, Vault } from "obsidian";
-import { exec, spawn } from "child_process";
+import { App, FileSystemAdapter, TFile } from "obsidian";
+import { exec } from "child_process";
 import * as path from "path";
 import * as fs from "fs";
 import * as os from "os";
@@ -39,7 +39,10 @@ export function runCommand(
 // === Vault Path ===
 
 export function getVaultPath(app: App): string {
-  return (app.vault.adapter as any).basePath;
+  if (app.vault.adapter instanceof FileSystemAdapter) {
+    return app.vault.adapter.getBasePath();
+  }
+  throw new Error("Press PDF Export requires the desktop file system adapter.");
 }
 
 // === Attachment Path Resolution ===
@@ -81,8 +84,11 @@ export function resolveAttachmentPath(
   }
 
   // Try Obsidian attachmentFolderPath setting
-  const attachmentFolder = (app.vault as any).getConfig?.("attachmentFolderPath");
-  if (attachmentFolder) {
+  const vaultConfig = app.vault as unknown as {
+    getConfig?: (key: string) => unknown;
+  };
+  const attachmentFolder = vaultConfig.getConfig?.("attachmentFolderPath");
+  if (typeof attachmentFolder === "string" && attachmentFolder) {
     const absAttachment = path.join(vaultPath, attachmentFolder, src);
     if (fs.existsSync(absAttachment)) {
       return absAttachment;
@@ -128,10 +134,11 @@ export async function checkCommandExists(cmd: string): Promise<boolean> {
 
 // === Temp Directory ===
 
-export function getTmpDir(vaultPath: string): string {
+export function getTmpDir(app: App): string {
+  const vaultPath = getVaultPath(app);
   const tmpDir = path.join(
     vaultPath,
-    ".obsidian",
+    app.vault.configDir,
     "plugins",
     "press-pdf-export",
     "tmp"
@@ -140,19 +147,6 @@ export function getTmpDir(vaultPath: string): string {
     fs.mkdirSync(tmpDir, { recursive: true });
   }
   return tmpDir;
-}
-
-export async function cleanTmpDir(tmpDir: string): Promise<void> {
-  try {
-    if (fs.existsSync(tmpDir)) {
-      const files = fs.readdirSync(tmpDir);
-      for (const file of files) {
-        fs.unlinkSync(path.join(tmpDir, file));
-      }
-    }
-  } catch {
-    // Ignore cleanup errors
-  }
 }
 
 // === Semaphore ===
@@ -200,13 +194,14 @@ export function getOutputPath(
   let fileName: string;
 
   switch (naming) {
-    case "timestamp":
+    case "timestamp": {
       const ts = new Date()
         .toISOString()
         .replace(/[:.]/g, "-")
         .slice(0, 19);
       fileName = `${baseName}_${ts}.${format}`;
       break;
+    }
     case "suffix":
       fileName = `${baseName}_export.${format}`;
       break;
@@ -239,7 +234,7 @@ export async function getPandocVersion(
 ): Promise<string | null> {
   const { stdout, code } = await runCommand(`${pandocPath} --version`);
   if (code === 0) {
-    const match = stdout.match(/pandoc\s+(\d+\.\d+[\.\d]*)/);
+    const match = stdout.match(/pandoc\s+(\d+\.\d+[.\d]*)/);
     return match ? match[1] : "unknown";
   }
   return null;

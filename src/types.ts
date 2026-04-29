@@ -1,5 +1,3 @@
-import { TFile, TFolder } from "obsidian";
-
 // === Settings ===
 
 export type PdfEngine =

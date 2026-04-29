@@ -1,0 +1,33 @@
+import tsparser from "@typescript-eslint/parser";
+import { defineConfig } from "eslint/config";
+import obsidianmd from "eslint-plugin-obsidianmd";
+
+export default defineConfig([
+  ...obsidianmd.configs.recommended,
+  {
+    files: ["src/**/*.ts"],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: { project: "./tsconfig.json" },
+    },
+    rules: {
+      "obsidianmd/no-nodejs-modules": "off",
+      "obsidianmd/ui/sentence-case": [
+        "warn",
+        {
+          acronyms: ["PDF", "DOCX", "HTML", "CSS", "CLI", "CJK"],
+          brands: [
+            "Pandoc",
+            "XeLaTeX",
+            "pdfLaTeX",
+            "LuaLaTeX",
+            "WeasyPrint",
+            "Typst",
+            "Mermaid",
+            "Homebrew",
+          ],
+        },
+      ],
+    },
+  },
+]);

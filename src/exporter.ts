@@ -1,4 +1,4 @@
-import { App, TFile, TFolder, Notice, Vault, requestUrl } from "obsidian";
+import { App, TFile, TFolder, requestUrl } from "obsidian";
 import * as path from "path";
 import * as fs from "fs";
 import { spawn } from "child_process";
@@ -9,7 +9,6 @@ import {
   getVaultPath,
   getOutputPath,
   getTmpDir,
-  cleanTmpDir,
   createSemaphore,
   checkCommandExists,
 } from "./utils";
@@ -22,7 +21,7 @@ export async function exportFile(
   settings: PluginSettings
 ): Promise<ExportResult> {
   const vaultPath = getVaultPath(app);
-  const tmpDir = getTmpDir(vaultPath);
+  const tmpDir = getTmpDir(app);
 
   try {
     // Read file content
@@ -88,7 +87,7 @@ export async function exportFile(
     const pandocOptions: PandocOptions = {
       inputPath: tempMdPath,
       outputPath,
-      format: format as any,
+      format,
       engine: effectivePdfEngine,
       pandocPath: settings.pandocPath,
       tempDir: tmpDir,

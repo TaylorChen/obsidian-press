@@ -1,6 +1,6 @@
-import { App, TFile, Vault } from "obsidian";
+import { App, TFile } from "obsidian";
 import { RenderResult, CalloutType } from "./types";
-import { resolveAttachmentPath, getVaultPath, getTmpDir } from "./utils";
+import { resolveAttachmentPath, getTmpDir } from "./utils";
 import { renderMermaidBlock } from "./mermaid";
 
 const CALLOUT_TYPES: CalloutType[] = [
@@ -49,8 +49,7 @@ export async function renderToPandoc(
   mermaidPath: string,
   mermaidTheme: string
 ): Promise<RenderResult> {
-  const vaultPath = getVaultPath(app);
-  const tmpDir = getTmpDir(vaultPath);
+  const tmpDir = getTmpDir(app);
   const tempFiles: string[] = [];
 
   // Step 1: Strip YAML frontmatter (preserve title as heading)
@@ -78,7 +77,7 @@ export async function renderToPandoc(
   rendered = convertWikilinks(rendered, file, app);
 
   // Step 6: Convert embedded images ![[img.png]] → ![img](abs/path)
-  rendered = await convertEmbeds(rendered, file, app);
+  rendered = convertEmbeds(rendered, file, app);
 
   // Step 7: Inline embedded notes ![[other-note]] (limited depth)
   rendered = await inlineNoteEmbeds(rendered, file, app, 0, 5);
@@ -224,18 +223,28 @@ function indentFormattedCode(code: string): string {
   let level = 0;
 
   for (const line of lines) {
-    if (/^[}\])]/.test(line)) {
+    if (line.startsWith("}") || line.startsWith("]") || line.startsWith(")")) {
       level = Math.max(0, level - 1);
     }
 
     output.push(`${"  ".repeat(level)}${line}`);
 
-    const opens = (line.match(/[{\[(]/g) || []).length;
-    const closes = (line.match(/[}\])]/g) || []).length;
+    const opens = countCharacters(line, "{[(");
+    const closes = countCharacters(line, "}])");
     level = Math.max(0, level + opens - closes);
   }
 
   return output.join("\n");
+}
+
+function countCharacters(value: string, characters: string): number {
+  let count = 0;
+  for (const char of value) {
+    if (characters.includes(char)) {
+      count++;
+    }
+  }
+  return count;
 }
 
 // === Code protection ===
@@ -323,7 +332,7 @@ function convertCallouts(content: string): string {
       const lines = match.split("\n");
       const bodyLines = lines
         .map((line: string) => line.replace(/^>\s?/, ""))
-        .filter((line: string, i: number) => {
+        .filter((_line: string, i: number) => {
           // Remove the first line (the [!type] line)
           if (i === 0) return false;
           return true;
@@ -368,11 +377,11 @@ function convertWikilinks(content: string, file: TFile, app: App): string {
 
 // === Step 4: Embed Images ===
 
-async function convertEmbeds(
+function convertEmbeds(
   content: string,
   file: TFile,
   app: App
-): Promise<string> {
+): string {
   // ![[image.png]] or ![[image.png|size]]
   const embedRegex = /!\[\[([^\]|]+?)(?:\|(\d+))?\]\]/g;
 
@@ -457,7 +466,7 @@ function convertHighlights(content: string): string {
 
 function convertSupSub(content: string): string {
   // ^text^ → <sup>text</sup>
-  let result = content.replace(/\^([^\^]+)\^/g, "<sup>$1</sup>");
+  let result = content.replace(/\^([^^]+)\^/g, "<sup>$1</sup>");
   // ~~text~~ → <sub>text</sub>
   result = result.replace(/~~([^~]+)~~/g, "<sub>$1</sub>");
   return result;
@@ -488,7 +497,7 @@ function convertImageSizes(content: string): string {
 
 async function convertMermaidBlocks(
   content: string,
-  mermaidPath: string,
+  _mermaidPath: string,
   mermaidTheme: string,
   tmpDir: string,
   tempFiles: string[]
