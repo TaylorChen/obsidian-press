@@ -356,7 +356,7 @@ var path2 = __toESM(require("path"));
 async function renderMermaidBlock(code, theme, tmpDir, index) {
   const mmdcAvailable = await checkCommandExists("mmdc");
   if (!mmdcAvailable) {
-    console.warn("Obsidian Press: mmdc not found, skipping Mermaid rendering");
+    console.warn("Press PDF Export: mmdc not found, skipping Mermaid rendering");
     return null;
   }
   const inputFile = path2.join(tmpDir, `mermaid-input-${index}.mmd`);
@@ -370,10 +370,10 @@ async function renderMermaidBlock(code, theme, tmpDir, index) {
     if (exitCode === 0 && fs2.existsSync(outputFile)) {
       return outputFile;
     }
-    console.warn("Obsidian Press: Mermaid rendering failed:", stderr);
+    console.warn("Press PDF Export: Mermaid rendering failed:", stderr);
     return null;
   } catch (err) {
-    console.error("Obsidian Press: Mermaid rendering error:", err);
+    console.error("Press PDF Export: Mermaid rendering error:", err);
     return null;
   } finally {
     try {
@@ -1404,7 +1404,7 @@ async function downloadRemoteWebpIfNeeded(rawUrl, tmpDir, index) {
     image = await downloadRemoteImage(url);
   } catch (err) {
     console.warn(
-      "Obsidian Press: could not inspect remote image before export:",
+      "Press PDF Export: could not inspect remote image before export:",
       url,
       err
     );
@@ -1439,7 +1439,7 @@ async function downloadRemoteImageForTypst(url, tmpDir, index) {
     }
     return downloadedPath;
   } catch (err) {
-    console.warn("Obsidian Press: could not download remote image:", url, err);
+    console.warn("Press PDF Export: could not download remote image:", url, err);
     return createMissingImagePlaceholder(tmpDir, index);
   }
 }
@@ -1633,7 +1633,7 @@ async function preflightChecks(settings) {
   );
   if (!mermaidExists) {
     console.warn(
-      "Obsidian Press: mmdc not found. Mermaid diagrams will be exported as code blocks."
+      "Press PDF Export: mmdc not found. Mermaid diagrams will be exported as code blocks."
     );
   }
   return {
@@ -1680,7 +1680,7 @@ var ExportProgressNotice = class {
 var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
   async onload() {
     await this.loadSettings();
-    this.addRibbonIcon("file-output", "Obsidian Press: Export current note", () => {
+    this.addRibbonIcon("file-output", "Press PDF Export: Export current note", () => {
       this.exportCurrentNote();
     });
     this.addCommand({
@@ -1761,18 +1761,18 @@ var ObsidianPressPlugin = class extends import_obsidian4.Plugin {
       this.app.workspace.on("file-menu", (menu, file) => {
         if (file instanceof import_obsidian4.TFile && file.extension === "md") {
           menu.addItem((item) => {
-            item.setTitle("\u5BFC\u51FA\u4E3A PDF\uFF08Obsidian Press\uFF09").setIcon("file-output").onClick(() => this.exportSpecificFile(file));
+            item.setTitle("\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("file-output").onClick(() => this.exportSpecificFile(file));
           });
           menu.addItem((item) => {
-            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5BFC\u51FA\u4E3A PDF\uFF08Obsidian Press\uFF09").setIcon("folder-open").onClick(() => this.exportSpecificFileWithDirectory(file, "pdf"));
+            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("folder-open").onClick(() => this.exportSpecificFileWithDirectory(file, "pdf"));
           });
         }
         if (file instanceof import_obsidian4.TFolder) {
           menu.addItem((item) => {
-            item.setTitle("\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Obsidian Press\uFF09").setIcon("file-output").onClick(() => this.exportFolder(file));
+            item.setTitle("\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("file-output").onClick(() => this.exportFolder(file));
           });
           menu.addItem((item) => {
-            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Obsidian Press\uFF09").setIcon("folder-open").onClick(() => this.exportFolderWithDirectory(file));
+            item.setTitle("\u9009\u62E9\u76EE\u5F55\u5168\u90E8\u5BFC\u51FA\u4E3A PDF\uFF08Press PDF Export\uFF09").setIcon("folder-open").onClick(() => this.exportFolderWithDirectory(file));
           });
         }
       })
@@ -1901,7 +1901,7 @@ ${check.errors.join("\n")}`, 8e3);
       ].join("\n");
       new import_obsidian4.Notice(summary, 1e4);
       if (result.failed > 0 && result.errors.length > 0) {
-        console.error("Obsidian Press export errors:", result.errors);
+        console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();
@@ -1956,7 +1956,7 @@ ${check.errors.join("\n")}`, 8e3);
       ].join("\n");
       new import_obsidian4.Notice(summary, 1e4);
       if (result.failed > 0 && result.errors.length > 0) {
-        console.error("Obsidian Press export errors:", result.errors);
+        console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();

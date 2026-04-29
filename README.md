@@ -1,8 +1,8 @@
-# Obsidian Press
+# Press PDF Export
 
 High-fidelity PDF export plugin for Obsidian, powered by [Pandoc](https://pandoc.org/).
 
-Obsidian Press converts Obsidian Markdown into Pandoc-compatible Markdown, then exports notes to PDF, Word, or HTML. It is desktop-only because it calls local command-line tools such as Pandoc, LaTeX, wkhtmltopdf, WeasyPrint, Typst, and Mermaid CLI.
+Press PDF Export converts Obsidian Markdown into Pandoc-compatible Markdown, then exports notes to PDF, Word, or HTML. It is desktop-only because it calls local command-line tools such as Pandoc, LaTeX, wkhtmltopdf, WeasyPrint, Typst, and Mermaid CLI.
 
 ## Status
 
@@ -107,7 +107,7 @@ curl -L https://mirrors.ctan.org/systems/mac/mactex/mactex-basictex-20260301.pkg
 sudo installer -pkg /tmp/mactex-basictex.pkg -target /
 ```
 
-BasicTeX installs the TeX CLI tools into `/Library/TeX/texbin`. Obsidian Press adds this directory to its runtime PATH, but after installing BasicTeX/MacTeX you should restart Obsidian.
+BasicTeX installs the TeX CLI tools into `/Library/TeX/texbin`. Press PDF Export adds this directory to its runtime PATH, but after installing BasicTeX/MacTeX you should restart Obsidian.
 
 Verify all engines:
 
@@ -168,7 +168,7 @@ mkdir -p /path/to/your-vault/.obsidian/plugins/press-pdf-export/
 cp main.js manifest.json styles.css /path/to/your-vault/.obsidian/plugins/press-pdf-export/
 ```
 
-In Obsidian: **Settings → Community Plugins → Enable "Obsidian Press"**.
+In Obsidian: **Settings → Community Plugins → Enable "Press PDF Export"**.
 
 ### Pre-built
 
@@ -195,10 +195,10 @@ Access via **Command Palette** (`Cmd/Ctrl + P`) or the ribbon icon (file output 
 
 ### Right-Click Menu
 
-- Right-click a `.md` file → **导出为 PDF（Obsidian Press）**
-- Right-click a `.md` file → **选择目录导出为 PDF（Obsidian Press）**
-- Right-click a folder → **全部导出为 PDF（Obsidian Press）**
-- Right-click a folder → **选择目录全部导出为 PDF（Obsidian Press）**
+- Right-click a `.md` file → **导出为 PDF（Press PDF Export）**
+- Right-click a `.md` file → **选择目录导出为 PDF（Press PDF Export）**
+- Right-click a folder → **全部导出为 PDF（Press PDF Export）**
+- Right-click a folder → **选择目录全部导出为 PDF（Press PDF Export）**
 
 ## Settings
 
@@ -341,7 +341,7 @@ The package is written to `dist/press-pdf-export-<version>/`.
 
 ### Obsidian Community Plugin Submission
 
-The marketplace plugin id is `press-pdf-export`; the display name remains **Obsidian Press**.
+The marketplace plugin id is `press-pdf-export`; the display name remains **Press PDF Export**.
 
 To submit to the Obsidian community plugin directory:
 
@@ -350,7 +350,7 @@ To submit to the Obsidian community plugin directory:
 3. Attach `main.js`, `manifest.json`, and `styles.css` from `dist/press-pdf-export-<version>/`.
 4. Fork `obsidianmd/obsidian-releases`.
 5. Add the plugin entry from `MARKETPLACE.md` to `community-plugins.json`.
-6. Open a pull request titled `Add plugin: Obsidian Press`.
+6. Open a pull request titled `Add plugin: Press PDF Export`.
 
 ### Engine Verification
 
@@ -370,7 +370,7 @@ You can run a quick local Pandoc check with:
 ```bash
 mkdir -p /tmp/obsidian-press-engine-test
 cat > /tmp/obsidian-press-engine-test/input.md <<'EOF'
-# Obsidian Press Engine Test
+# Press PDF Export Engine Test
 
 This is a PDF export test.
 
@@ -423,7 +423,7 @@ Restart Obsidian after installing BasicTeX or MacTeX.
 
 ### "openTempFile: permission denied" or read-only file system errors
 
-Pandoc or a PDF engine is trying to create temporary files in a non-writable directory. Obsidian Press sets `TMPDIR`, `TMP`, `TEMP`, `TEXMFVAR`, and `TEXMFCACHE` to the plugin's temporary directory at runtime. If this still appears:
+Pandoc or a PDF engine is trying to create temporary files in a non-writable directory. Press PDF Export sets `TMPDIR`, `TMP`, `TEMP`, `TEXMFVAR`, and `TEXMFCACHE` to the plugin's temporary directory at runtime. If this still appears:
 
 1. Restart Obsidian after updating the plugin.
 2. Make sure the vault is writable.
@@ -442,9 +442,9 @@ LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 /Library/TeX/texbin/tlmgr --usermode \
 
 ### PDF code blocks have no visible background
 
-Pandoc highlight themes without a background can make code blocks look too close to normal paragraphs. Obsidian Press uses Tango by default because it includes a visible code block background.
+Pandoc highlight themes without a background can make code blocks look too close to normal paragraphs. Press PDF Export uses Tango by default because it includes a visible code block background.
 
-For LaTeX PDF engines, Obsidian Press uses Pandoc's `--listings` mode and injects a small `\lstset{...}` header so long code lines wrap within the page instead of overflowing horizontally.
+For LaTeX PDF engines, Press PDF Export uses Pandoc's `--listings` mode and injects a small `\lstset{...}` header so long code lines wrap within the page instead of overflowing horizontally.
 
 If you disable listings manually through custom Pandoc arguments and rely on Pandoc's default LaTeX highlighter, a highlighted background may require `framed.sty`. BasicTeX may not include it:
 
@@ -483,7 +483,7 @@ which rsvg-convert
 
 ### XeLaTeX reports `Cannot determine size of graphic` for `.webp`
 
-LaTeX engines cannot reliably include WebP images directly. Obsidian Press converts local WebP images to temporary PNG files before running LaTeX. This requires `dwebp`, which is provided by WebP tools:
+LaTeX engines cannot reliably include WebP images directly. Press PDF Export converts local WebP images to temporary PNG files before running LaTeX. This requires `dwebp`, which is provided by WebP tools:
 
 ```bash
 brew install webp
@@ -494,7 +494,7 @@ The temporary PNG files are written under the plugin temp directory and cleaned 
 
 ### Typst reports `file not found` for `https:/...` images
 
-Pandoc's Typst backend may treat remote image URLs with query strings as local file paths. Obsidian Press downloads remote images to the plugin temp directory before Typst runs, strips WeChat's `tp=webp` image parameter when possible, and converts downloaded WebP images to PNG.
+Pandoc's Typst backend may treat remote image URLs with query strings as local file paths. Press PDF Export downloads remote images to the plugin temp directory before Typst runs, strips WeChat's `tp=webp` image parameter when possible, and converts downloaded WebP images to PNG.
 
 If a remote image cannot be downloaded, the export continues with a small placeholder image instead of failing the whole document.
 
@@ -511,7 +511,7 @@ npm install -g @mermaid-js/mermaid-cli
 2. Set a CJK font name. On macOS with BasicTeX, `STHeitiSC-Medium` is a reliable choice; `PingFang SC` may be unavailable to XeTeX because it is a system-reserved font.
 3. Use XeLaTeX or LuaLaTeX as the PDF engine
 
-pdfLaTeX cannot process Chinese/Japanese/Korean Unicode text directly. If `pdfLaTeX` is selected for a CJK note, Obsidian Press automatically uses XeLaTeX for that export.
+pdfLaTeX cannot process Chinese/Japanese/Korean Unicode text directly. If `pdfLaTeX` is selected for a CJK note, Press PDF Export automatically uses XeLaTeX for that export.
 
 If XeLaTeX reports `File 'xeCJK.sty' not found`, install the missing package:
 

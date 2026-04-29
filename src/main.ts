@@ -57,7 +57,7 @@ export default class ObsidianPressPlugin extends Plugin {
     await this.loadSettings();
 
     // Ribbon icon — export current note
-    this.addRibbonIcon("file-output", "Obsidian Press: Export current note", () => {
+    this.addRibbonIcon("file-output", "Press PDF Export: Export current note", () => {
       this.exportCurrentNote();
     });
 
@@ -152,13 +152,13 @@ export default class ObsidianPressPlugin extends Plugin {
         if (file instanceof TFile && file.extension === "md") {
           menu.addItem((item) => {
             item
-              .setTitle("导出为 PDF（Obsidian Press）")
+              .setTitle("导出为 PDF（Press PDF Export）")
               .setIcon("file-output")
               .onClick(() => this.exportSpecificFile(file));
           });
           menu.addItem((item) => {
             item
-              .setTitle("选择目录导出为 PDF（Obsidian Press）")
+              .setTitle("选择目录导出为 PDF（Press PDF Export）")
               .setIcon("folder-open")
               .onClick(() => this.exportSpecificFileWithDirectory(file, "pdf"));
           });
@@ -167,13 +167,13 @@ export default class ObsidianPressPlugin extends Plugin {
         if (file instanceof TFolder) {
           menu.addItem((item) => {
             item
-              .setTitle("全部导出为 PDF（Obsidian Press）")
+              .setTitle("全部导出为 PDF（Press PDF Export）")
               .setIcon("file-output")
               .onClick(() => this.exportFolder(file));
           });
           menu.addItem((item) => {
             item
-              .setTitle("选择目录全部导出为 PDF（Obsidian Press）")
+              .setTitle("选择目录全部导出为 PDF（Press PDF Export）")
               .setIcon("folder-open")
               .onClick(() => this.exportFolderWithDirectory(file));
           });
@@ -338,7 +338,7 @@ export default class ObsidianPressPlugin extends Plugin {
       new Notice(summary, 10000);
 
       if (result.failed > 0 && result.errors.length > 0) {
-        console.error("Obsidian Press export errors:", result.errors);
+        console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();
@@ -403,7 +403,7 @@ export default class ObsidianPressPlugin extends Plugin {
       new Notice(summary, 10000);
 
       if (result.failed > 0 && result.errors.length > 0) {
-        console.error("Obsidian Press export errors:", result.errors);
+        console.error("Press PDF Export export errors:", result.errors);
       }
     } catch (err) {
       progress.hide();

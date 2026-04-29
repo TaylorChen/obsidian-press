@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Obsidian Press are documented here.
+All notable changes to Press PDF Export are documented here.
 
 This project follows semantic versioning where practical.
 

@@ -15,7 +15,7 @@ export async function renderMermaidBlock(
   // Check if mmdc is available
   const mmdcAvailable = await checkCommandExists("mmdc");
   if (!mmdcAvailable) {
-    console.warn("Obsidian Press: mmdc not found, skipping Mermaid rendering");
+    console.warn("Press PDF Export: mmdc not found, skipping Mermaid rendering");
     return null;
   }
 
@@ -37,10 +37,10 @@ export async function renderMermaidBlock(
       return outputFile;
     }
 
-    console.warn("Obsidian Press: Mermaid rendering failed:", stderr);
+    console.warn("Press PDF Export: Mermaid rendering failed:", stderr);
     return null;
   } catch (err) {
-    console.error("Obsidian Press: Mermaid rendering error:", err);
+    console.error("Press PDF Export: Mermaid rendering error:", err);
     return null;
   } finally {
     // Clean up input file

@@ -1,9 +1,9 @@
 {
   "id": "press-pdf-export",
-  "name": "Obsidian Press",
+  "name": "Press PDF Export",
   "version": "1.0.0",
   "description": "High-fidelity PDF export powered by Pandoc. Supports multiple engines (XeLaTeX, wkhtmltopdf, WeasyPrint), Mermaid diagrams, custom CSS/templates, and batch export.",
   "minAppVersion": "0.15.0",
-  "author": "Obsidian Press Contributors",
+  "author": "Taylor Chen",
   "isDesktopOnly": true
 }

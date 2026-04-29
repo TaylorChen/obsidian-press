@@ -514,7 +514,7 @@ async function downloadRemoteWebpIfNeeded(
     image = await downloadRemoteImage(url);
   } catch (err) {
     console.warn(
-      "Obsidian Press: could not inspect remote image before export:",
+      "Press PDF Export: could not inspect remote image before export:",
       url,
       err
     );
@@ -567,7 +567,7 @@ async function downloadRemoteImageForTypst(
 
     return downloadedPath;
   } catch (err) {
-    console.warn("Obsidian Press: could not download remote image:", url, err);
+    console.warn("Press PDF Export: could not download remote image:", url, err);
     return createMissingImagePlaceholder(tmpDir, index);
   }
 }
@@ -837,7 +837,7 @@ export async function preflightChecks(
   if (!mermaidExists) {
     // Not an error, just a warning — mermaid blocks will be kept as code
     console.warn(
-      "Obsidian Press: mmdc not found. Mermaid diagrams will be exported as code blocks."
+      "Press PDF Export: mmdc not found. Mermaid diagrams will be exported as code blocks."
     );
   }
 

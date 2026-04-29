@@ -9,8 +9,8 @@ Add this object to the end of `community-plugins.json` in `obsidianmd/obsidian-r
 ```json
 {
   "id": "press-pdf-export",
-  "name": "Obsidian Press",
-  "author": "Obsidian Press Contributors",
+  "name": "Press PDF Export",
+  "author": "Taylor Chen",
   "description": "High-fidelity PDF export powered by Pandoc. Supports multiple engines (XeLaTeX, wkhtmltopdf, WeasyPrint), Mermaid diagrams, custom CSS/templates, and batch export.",
   "repo": "TaylorChen/obsidian-press"
 }
@@ -41,4 +41,4 @@ Do not prefix the tag with `v`; use `1.0.0`, not `v1.0.0`.
 3. Attach `main.js`, `manifest.json`, and `styles.css` from the release package directory.
 4. Fork `obsidianmd/obsidian-releases`.
 5. Add the plugin entry above to `community-plugins.json`.
-6. Open a pull request titled `Add plugin: Obsidian Press`.
+6. Open a pull request titled `Add plugin: Press PDF Export`.

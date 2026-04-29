@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving Obsidian Press.
+Thanks for your interest in improving Press PDF Export.
 
 ## Development Setup
 
