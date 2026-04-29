@@ -6,6 +6,8 @@ This project follows semantic versioning where practical.
 
 ## 1.0.0 - 2026-04-28
 
+- Prepared community plugin metadata with marketplace id `press-pdf-export`.
+- Added export progress notices for single-file, folder, and whole-vault exports.
 - Added PDF export through Pandoc with XeLaTeX, pdfLaTeX, LuaLaTeX, wkhtmltopdf, WeasyPrint, and Typst engines.
 - Added DOCX and HTML export.
 - Added current note, current folder, and whole vault export commands.

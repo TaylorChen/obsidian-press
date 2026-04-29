@@ -27,8 +27,8 @@ npm run build
 Build the plugin, then copy these files into a test vault:
 
 ```bash
-mkdir -p /path/to/vault/.obsidian/plugins/obsidian-press
-cp main.js manifest.json styles.css /path/to/vault/.obsidian/plugins/obsidian-press/
+mkdir -p /path/to/vault/.obsidian/plugins/press-pdf-export
+cp main.js manifest.json styles.css /path/to/vault/.obsidian/plugins/press-pdf-export/
 ```
 
 Restart Obsidian or reload the plugin after copying files.

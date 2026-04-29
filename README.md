@@ -164,15 +164,15 @@ npm run build
 Then copy the built files to your vault:
 
 ```bash
-mkdir -p /path/to/your-vault/.obsidian/plugins/obsidian-press/
-cp main.js manifest.json styles.css /path/to/your-vault/.obsidian/plugins/obsidian-press/
+mkdir -p /path/to/your-vault/.obsidian/plugins/press-pdf-export/
+cp main.js manifest.json styles.css /path/to/your-vault/.obsidian/plugins/press-pdf-export/
 ```
 
 In Obsidian: **Settings → Community Plugins → Enable "Obsidian Press"**.
 
 ### Pre-built
 
-Copy `main.js`, `manifest.json`, `styles.css` into `<vault>/.obsidian/plugins/obsidian-press/` and enable the plugin in Obsidian settings.
+Copy `main.js`, `manifest.json`, `styles.css` into `<vault>/.obsidian/plugins/press-pdf-export/` and enable the plugin in Obsidian settings.
 
 ## Usage
 
@@ -330,6 +330,27 @@ main.js
 manifest.json
 styles.css
 ```
+
+Or generate the release asset directory automatically:
+
+```bash
+npm run release:package
+```
+
+The package is written to `dist/press-pdf-export-<version>/`.
+
+### Obsidian Community Plugin Submission
+
+The marketplace plugin id is `press-pdf-export`; the display name remains **Obsidian Press**.
+
+To submit to the Obsidian community plugin directory:
+
+1. Push this repository to GitHub.
+2. Create a GitHub release whose tag exactly matches `manifest.json`, for example `1.0.0`.
+3. Attach `main.js`, `manifest.json`, and `styles.css` from `dist/press-pdf-export-<version>/`.
+4. Fork `obsidianmd/obsidian-releases`.
+5. Add the plugin entry from `MARKETPLACE.md` to `community-plugins.json`.
+6. Open a pull request titled `Add plugin: Obsidian Press`.
 
 ### Engine Verification
 

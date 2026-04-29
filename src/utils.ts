@@ -133,7 +133,7 @@ export function getTmpDir(vaultPath: string): string {
     vaultPath,
     ".obsidian",
     "plugins",
-    "obsidian-press",
+    "press-pdf-export",
     "tmp"
   );
   if (!fs.existsSync(tmpDir)) {
